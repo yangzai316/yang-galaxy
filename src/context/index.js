@@ -1,6 +1,6 @@
 import React from 'react';
 import { Index } from './../pages/index';
-import { getChunk, addChunk } from './../chunk-config';
+import { getChunk, addChunk, setChunk } from './../chunk-config';
 
 export const rootData = {
   container: {
@@ -10,6 +10,7 @@ export const rootData = {
   },
   current: null,
   setContainer: () => {},
+  setCurrent: () => {},
 };
 
 export const RootContext = React.createContext(rootData);
@@ -30,16 +31,25 @@ export class ContextProvider extends React.Component {
         };
       });
     };
+    this.setCurrent = (id, name, value) => {
+      this.setState((root) => {
+        root.current.protoTypes.find((o) => o.name === name).default = value;
+        const container = setChunk(id, root.container, root.current);
+        return {
+          container,
+          current: root.current,
+        };
+      });
+    };
 
-    // State 也包含了更新函数，因此它会被传递进 context provider。
     this.state = {
       container: rootData.container,
       setContainer: this.setContainer,
+      setCurrent: this.setCurrent,
     };
   }
 
   render() {
-    // 整个 state 都被传递进 provider
     return (
       <RootContext.Provider value={this.state}>
         <Index />

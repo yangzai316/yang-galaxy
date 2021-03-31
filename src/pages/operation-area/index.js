@@ -1,5 +1,5 @@
 // import styled from '@emotion/styled';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { RootContext } from './../../context';
 import { Button } from 'antd';
 
@@ -18,12 +18,19 @@ const CreateChunkItem = ({ container }) => {
   return <CreateComponent type={container.type} children={children} protoTypes={container.protoTypes} id={container.id}></CreateComponent>;
 };
 
-const CreateComponent = ({ id, type, children, protoTypes = {} }) => {
+const CreateComponent = ({ id, type, children, protoTypes = [] }) => {
+  const attrs = useMemo(() => {
+    const _ = {};
+    protoTypes.forEach((item) => {
+      item.default && (_[item.name] = item.default);
+    });
+    return _;
+  }, [protoTypes]);
   if (type === 'Button') {
-    return <Button>按钮</Button>;
+    return <Button {...attrs}>按钮</Button>;
   } else {
     return (
-      <div style={{ height: '100%', backgroundColor: '#585757' }} data-id={id}>
+      <div style={{ height: '100%' }} data-id={id}>
         {children}
       </div>
     );

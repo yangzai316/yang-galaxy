@@ -16,30 +16,49 @@ export const ConfigureArea = () => {
 const ViewConfigure = ({ currentChunkData }) => {
   if (currentChunkData?.protoTypes?.length) {
     return currentChunkData.protoTypes.map((item, index) => {
-      return <RenderConfigure protoType={item} key={index}></RenderConfigure>;
+      return <RenderConfigure protoType={item} id={currentChunkData.id} key={index}></RenderConfigure>;
     });
   }
   return '';
 };
 // 左侧 component 渲染
-const RenderConfigure = ({ protoType }) => {
+const RenderConfigure = ({ protoType, id }) => {
+  const { setCurrent } = useContext(RootContext);
+  const onChange = (id, name, value) => {
+    setCurrent(id, name, value);
+  };
   switch (protoType.type) {
     case 'switch':
       return (
         <Form.Item label={protoType.name}>
-          <Switch size="small" checked={protoType.default} />
+          <Switch
+            size="small"
+            checked={protoType.default}
+            onChange={(value) => {
+              onChange(id, protoType.name, value);
+            }}
+          />
         </Form.Item>
       );
     case 'input':
       return (
         <Form.Item label={protoType.name}>
-          <Input />
+          <Input
+            onChange={(e) => {
+              onChange(id, protoType.name, e.target.value);
+            }}
+          />
         </Form.Item>
       );
     case 'select':
       return (
         <Form.Item label={protoType.name}>
-          <Select defaultValue={protoType.default}>
+          <Select
+            defaultValue={protoType.default}
+            onChange={(value) => {
+              onChange(id, protoType.name, value);
+            }}
+          >
             {protoType.options.map((item) => {
               return (
                 <Select.Option value={item} key={item}>

@@ -11,10 +11,10 @@ export const chunksMap = {
       { name: 'htmlType', type: 'input', default: '' },
       { name: 'icon', type: 'input', default: '' },
       { name: 'loading', type: 'switch', default: false },
-      { name: 'shape', type: 'input', default: '' },
+      { name: 'shape', type: 'select', default: '', options: ['round', 'circle'] },
       { name: 'target', type: 'input', default: '' },
-      { name: 'size', type: 'select', default: 'default', options: ['primary', 'ghost', 'dashed', 'link', 'text', 'default'] },
-      { name: 'type', type: 'select', default: 'middle', options: ['large', 'middle', 'small'] },
+      { name: 'type', type: 'select', default: 'default', options: ['primary', 'ghost', 'dashed', 'link', 'text', 'default'] },
+      { name: 'size', type: 'select', default: 'middle', options: ['large', 'middle', 'small'] },
     ],
   },
 };
