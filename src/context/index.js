@@ -10,6 +10,7 @@ export const rootData = {
   current: null,
   setContainer: () => {},
   setCurrent: () => {},
+  focusCurrent: () => {},
 };
 
 export const RootContext = React.createContext(rootData);
@@ -41,11 +42,23 @@ export class ContextProvider extends React.Component {
         };
       });
     };
+    // 将左侧属性设置栏，聚焦到点击的组件上
+    this.focusCurrent = (id) => {
+     
+      const current = JSON.parse(JSON.stringify(chunkMap[id]));
+      
+      this.setState(() => {
+        return {
+          current,
+        };
+      });
+    };
     // 返回 state (包含设置function)
     this.state = {
       container: rootData.container,
       setContainer: this.setContainer,
       setCurrent: this.setCurrent,
+      focusCurrent: this.focusCurrent,
     };
   }
 

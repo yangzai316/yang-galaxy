@@ -1,5 +1,5 @@
 // import styled from '@emotion/styled';
-import { useContext, useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { RootContext } from './../../context';
 import { Button } from 'antd';
 // 渲染 中间 操作区
@@ -16,8 +16,10 @@ const CreateChunkItem = ({ container }) => {
       return <CreateChunkItem container={item} key={index}></CreateChunkItem>;
     });
   }
+
   return <CreateComponent type={container.type} children={children} protoTypes={container.protoTypes} id={container.id}></CreateComponent>;
 };
+
 // 渲染 具体 antD 组件
 const CreateComponent = ({ id, type, children, protoTypes = [] }) => {
   // (protoTypes 的数组 转为 对象 ) & (去除属性为空)&(添加到组件上)
@@ -28,8 +30,18 @@ const CreateComponent = ({ id, type, children, protoTypes = [] }) => {
     });
     return _;
   }, [protoTypes]);
+  const { focusCurrent } = useContext(RootContext);
+
+  const focusElementToCurrent = () => {
+    focusCurrent(id);
+  };
+
   if (type === 'Button') {
-    return <Button {...attrs}>按钮</Button>;
+    return (
+      <Button {...attrs} onClick={focusElementToCurrent}>
+        按钮
+      </Button>
+    );
   } else {
     return (
       <div style={{ height: '100%' }} data-id={id}>
