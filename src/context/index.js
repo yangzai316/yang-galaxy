@@ -1,13 +1,12 @@
 import React from 'react';
 import { Index } from './../pages/index';
-import { getChunk, addChunk, setChunk } from './../chunk-config';
+
+import { chunkMap } from './../chunk-config/map.js';
+import { chunkOrigin } from './../chunk-config/origin.js';
+import { addItemToRootData, setItemProtoType } from './../chunk-config';
 
 export const rootData = {
-  container: {
-    id: '1',
-    type: 'div',
-    children: [],
-  },
+  container: chunkOrigin,
   current: null,
   setContainer: () => {},
   setCurrent: () => {},
@@ -18,30 +17,31 @@ export const RootContext = React.createContext(rootData);
 export class ContextProvider extends React.Component {
   constructor(props) {
     super(props);
-
-    this.setContainer = (id, type, parentId) => {
-      const item = getChunk(type);
-      item.id = id;
-      this.setState((root) => {
-        const container = addChunk(parentId, root.container, item);
-
+    // 处理 中间 操作区 的 json
+    this.setContainer = (parentId, id, type) => {
+      addItemToRootData(parentId, id, type);
+      const container = JSON.parse(JSON.stringify(chunkOrigin));
+      const current = JSON.parse(JSON.stringify(chunkMap[id]));
+      this.setState(() => {
         return {
           container,
-          current: item,
+          current,
         };
       });
     };
+    // 处理 左侧 当前组件 配置项 的 json
     this.setCurrent = (id, name, value) => {
-      this.setState((root) => {
-        root.current.protoTypes.find((o) => o.name === name).default = value;
-        const container = setChunk(id, root.container, root.current);
+      setItemProtoType(id, name, value);
+      const container = JSON.parse(JSON.stringify(chunkOrigin));
+      const current = JSON.parse(JSON.stringify(chunkMap[id]));
+      this.setState(() => {
         return {
           container,
-          current: root.current,
+          current,
         };
       });
     };
-
+    // 返回 state (包含设置function)
     this.state = {
       container: rootData.container,
       setContainer: this.setContainer,

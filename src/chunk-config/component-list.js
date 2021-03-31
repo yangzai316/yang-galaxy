@@ -1,4 +1,4 @@
-export const chunksMap = {
+export const components = {
   Button: {
     type: 'Button',
     name: '按钮',

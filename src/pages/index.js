@@ -22,7 +22,7 @@ export const Index = () => {
     document.addEventListener(
       'dragend',
       (e) => {
-        setContainer(+new Date(), ele.current?.dataset?.type, parentId.current);
+        setContainer(parentId.current, +new Date(), ele.current?.dataset?.type);
       },
       false
     );

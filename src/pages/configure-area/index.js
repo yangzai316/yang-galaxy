@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { RootContext } from './../../context';
 import { Switch, Input, Select, Form } from 'antd';
-// 导出 参数配置区域
+// 渲染 左侧 参数配置区域
 export const ConfigureArea = () => {
   const { current: currentChunkData } = useContext(RootContext);
   return currentChunkData ? (
@@ -12,7 +12,7 @@ export const ConfigureArea = () => {
     ''
   );
 };
-// 左侧 参数配置区域 渲染逻辑处理
+// 循环+递归 渲染 json
 const ViewConfigure = ({ currentChunkData }) => {
   if (currentChunkData?.protoTypes?.length) {
     return currentChunkData.protoTypes.map((item, index) => {
@@ -21,7 +21,7 @@ const ViewConfigure = ({ currentChunkData }) => {
   }
   return '';
 };
-// 左侧 component 渲染
+// 将组件配置项 具体 渲染 antD 组件
 const RenderConfigure = ({ protoType, id }) => {
   const { setCurrent } = useContext(RootContext);
   const onChange = (id, name, value) => {
