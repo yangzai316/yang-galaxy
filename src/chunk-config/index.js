@@ -3,6 +3,7 @@ import { chunkMap } from './map';
 import { chunkOrigin } from './origin';
 
 import { components } from './component-list.js';
+
 // (添加 chunk 组件 到 源数据中) & (添加 chunk 组件 到 组件Map表中)
 export const addItemToRootData = (parentId, id, type) => {
   const component = findComponentFromList(type, id);
@@ -15,15 +16,13 @@ const addItemToMap = (id, component) => {
   chunkMap[id] = component;
 };
 // 添加 chunk 组件 到 源数据中
-const addItemToOrigin = (parentId, component, origin) => {
-  if (origin.id === parentId && origin.children) {
-    origin.children.push(component);
-  } else if (origin?.children?.length) {
-    origin.children.forEach((o) => {
-      addItemToOrigin(parentId, component, o);
-    });
+const addItemToOrigin = (parentId, component) => {
+  const parent = chunkMap[parentId];
+  if (parent?.children) {
+    parent.children.push(component);
   }
 };
+
 // 设置 chunk 组件的属性数据
 export const setItemProtoType = (id, name, value) => {
   const component = chunkMap[id];

@@ -44,6 +44,7 @@ const RenderConfigure = ({ protoType, id }) => {
       return (
         <Form.Item label={protoType.name}>
           <Input
+            defaultValue={protoType.default}
             onChange={(e) => {
               onChange(id, protoType.name, e.target.value);
             }}
@@ -72,7 +73,7 @@ const RenderConfigure = ({ protoType, id }) => {
     default:
       return (
         <Form.Item label={protoType.name}>
-          <span>数据出错...</span>
+          <span>&gt;无对应配置组件&lt;</span>
         </Form.Item>
       );
   }

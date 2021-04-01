@@ -44,9 +44,8 @@ export class ContextProvider extends React.Component {
     };
     // 将左侧属性设置栏，聚焦到点击的组件上
     this.focusCurrent = (id) => {
-     
       const current = JSON.parse(JSON.stringify(chunkMap[id]));
-      
+
       this.setState(() => {
         return {
           current,

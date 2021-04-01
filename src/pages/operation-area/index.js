@@ -1,7 +1,7 @@
 // import styled from '@emotion/styled';
 import React, { useContext, useMemo } from 'react';
 import { RootContext } from './../../context';
-import { Button } from 'antd';
+import { Button, Input } from 'antd';
 // 渲染 中间 操作区
 export const OperationArea = () => {
   const { container } = useContext(RootContext);
@@ -13,7 +13,7 @@ const CreateChunkItem = ({ container }) => {
   let children = null;
   if (container?.children?.length) {
     children = container.children.map((item, index) => {
-      return <CreateChunkItem container={item} key={index}></CreateChunkItem>;
+      return <CreateChunkItem container={item} key={item.id}></CreateChunkItem>;
     });
   }
 
@@ -39,12 +39,14 @@ const CreateComponent = ({ id, type, children, protoTypes = [] }) => {
   if (type === 'Button') {
     return (
       <Button {...attrs} onClick={focusElementToCurrent}>
-        按钮
+        {attrs.content}
       </Button>
     );
+  } else if (type === 'Input') {
+    return <Input {...attrs} onClick={focusElementToCurrent}></Input>;
   } else {
     return (
-      <div style={{ height: '100%' }} data-id={id}>
+      <div style={{ height: '100%', padding: '10px' }} data-id={id}>
         {children}
       </div>
     );
