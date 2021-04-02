@@ -29,4 +29,22 @@ export const components = {
       { name: 'maxLength', type: 'input', default: '' },
     ],
   },
+  Form: {
+    type: 'Form',
+    name: '表单',
+    protoTypes: [
+      { name: 'labelAlign', type: 'select', default: 'right', options: ['right', 'left'] },
+      { name: 'layout', type: 'select', default: 'right', options: ['inline', 'vertical', 'vertical'] },
+    ],
+    children: [],
+  },
+  'Form.Item': {
+    type: 'Form.Item',
+    name: '表单项',
+    protoTypes: [
+      { name: 'label', type: 'input', default: '' },
+      { name: 'labelAlign', type: 'select', default: 'right', options: ['right', 'left'] },
+    ],
+    children: [],
+  },
 };

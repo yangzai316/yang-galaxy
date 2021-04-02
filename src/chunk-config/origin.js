@@ -1,5 +1,5 @@
 export const chunkOrigin = {
   id: '1',
-  type: 'div',
+  type: 'container',
   children: [],
 };

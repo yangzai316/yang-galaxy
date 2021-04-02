@@ -1,4 +1,4 @@
-import { Layout } from 'antd';
+import { Layout, notification } from 'antd';
 import styled from '@emotion/styled';
 import { ChunkArea } from './chunk-area';
 import { OperationArea } from './operation-area';
@@ -10,7 +10,7 @@ export const Index = () => {
   const { setContainer } = useContext(RootContext);
   const ele = useRef(null);
   const operation = createRef(null);
-  const parentId = createRef(0);
+  const parentId = createRef(undefined);
   useEffect(() => {
     document.addEventListener(
       'dragstart',
@@ -22,6 +22,12 @@ export const Index = () => {
     document.addEventListener(
       'dragend',
       (e) => {
+        if (!parentId.current) {
+          return notification.warning({
+            message: '未找到合法父级<parentId.current is undefined>',
+          });
+        } else {
+        }
         setContainer(parentId.current, +new Date(), ele.current?.dataset?.type);
       },
       false
@@ -30,6 +36,7 @@ export const Index = () => {
       'dragenter',
       (e) => {
         parentId.current = e.target?.dataset?.id;
+        console.log(e.target.getAttribute('class')?.includes('ant-form-item-control-input'));
       },
       false
     );
@@ -39,13 +46,13 @@ export const Index = () => {
     <Layout>
       <Header></Header>
       <Layout>
-        <Layout.Sider>
+        <Layout.Sider style={{ paddingTop: '10px' }}>
           <ChunkArea></ChunkArea>
         </Layout.Sider>
         <Content ref={operation}>
           <OperationArea></OperationArea>
         </Content>
-        <Layout.Sider>
+        <Layout.Sider width={300}>
           <ConfigureArea></ConfigureArea>
         </Layout.Sider>
       </Layout>

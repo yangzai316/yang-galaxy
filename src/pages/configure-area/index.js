@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import styled from '@emotion/styled';
 import { RootContext } from './../../context';
 import { Switch, Input, Select, Form } from 'antd';
 // 渲染 左侧 参数配置区域
@@ -9,7 +10,7 @@ export const ConfigureArea = () => {
       <ViewConfigure currentChunkData={currentChunkData}></ViewConfigure>
     </Form>
   ) : (
-    ''
+    <Text>无节点获取焦点</Text>
   );
 };
 // 循环+递归 渲染 json
@@ -44,7 +45,7 @@ const RenderConfigure = ({ protoType, id }) => {
       return (
         <Form.Item label={protoType.name}>
           <Input
-            defaultValue={protoType.default}
+            value={protoType.default}
             onChange={(e) => {
               onChange(id, protoType.name, e.target.value);
             }}
@@ -78,3 +79,8 @@ const RenderConfigure = ({ protoType, id }) => {
       );
   }
 };
+
+const Text = styled.p`
+  text-align: center;
+  padding: 10px;
+`;
