@@ -1,4 +1,4 @@
-import { Layout, notification } from 'antd';
+import { Layout, message } from 'antd';
 import styled from '@emotion/styled';
 import { ChunkArea } from './chunk-area';
 import { OperationArea } from './operation-area';
@@ -24,12 +24,11 @@ export const Index = () => {
       'dragend',
       (e) => {
         if (!parentId.current) {
-          return notification.warning({
-            message: '未找到合法父级...',
-          });
+          return message.error('操作失败：组件需拖拽到操作区中，方可有效');
         } else {
         }
         setContainer(parentId.current, +new Date(), ele.current?.dataset?.type);
+        parentId.current = null;
       },
       false
     );

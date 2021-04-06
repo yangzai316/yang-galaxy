@@ -16,8 +16,8 @@ const EleItem = styled.span`
   border: 1px solid #383838;
   cursor: pointer;
   float: left;
-  margin: 2px 5%;
-  width: 40%;
+  margin: 2px 1%;
+  width: 48%;
   text-align: center;
   font-size: 12px;
   border-radius: 0px;

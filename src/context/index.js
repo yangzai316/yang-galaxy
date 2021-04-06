@@ -3,7 +3,7 @@ import { Index } from './../pages/index';
 
 import { chunkMap } from './../chunk-config/map.js';
 import { chunkOrigin } from './../chunk-config/origin.js';
-import { addItemToRootData, setItemProtoType, setItemStyle, deleteItemFromRootData } from './../chunk-config';
+import { addItemToRootData, setItemProtoType, setItemStyle, deleteItemFromRootData, setSelectOptionFromRootData } from './../chunk-config';
 
 export const rootData = {
   container: chunkOrigin,
@@ -12,6 +12,7 @@ export const rootData = {
   setCurrent: () => {},
   focusCurrent: () => {},
   deleteCurrentChunk: () => {},
+  setSelectOption: () => {},
 };
 
 export const RootContext = React.createContext(rootData);
@@ -60,13 +61,24 @@ export class ContextProvider extends React.Component {
     };
     // 【移除】删除选中的组件
     this.deleteCurrentChunk = (id) => {
-      console.log(id);
       deleteItemFromRootData(id);
       const container = JSON.parse(JSON.stringify(chunkOrigin));
       this.setState(() => {
         return {
           container,
           current: null,
+        };
+      });
+    };
+    // 【修改options】修改 select options 内容
+    this.setSelectOption = (id, option) => {
+      setSelectOptionFromRootData(id, option);
+      const container = JSON.parse(JSON.stringify(chunkOrigin));
+      const current = JSON.parse(JSON.stringify(chunkMap[id]));
+      this.setState(() => {
+        return {
+          container,
+          current,
         };
       });
     };
@@ -79,6 +91,7 @@ export class ContextProvider extends React.Component {
       setCurrent: this.setCurrent,
       focusCurrent: this.focusCurrent,
       deleteCurrentChunk: this.deleteCurrentChunk,
+      setSelectOption: this.setSelectOption,
     };
   }
 

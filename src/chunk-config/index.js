@@ -42,7 +42,6 @@ export const deleteItemFromRootData = (id) => {
   findNodeAndDelete(chunkOrigin, id);
 };
 const findNodeAndDelete = (data, id, index, parentList) => {
-  console.log(9);
   if (data.id === id) {
     return parentList.splice(index, 1);
   } else if (data?.children?.length) {
@@ -60,4 +59,11 @@ export const setItemStyle = (id, name, value) => {
       return (item.default = value);
     }
   }
+};
+
+// 【修改options】修改 select options 内容
+export const setSelectOptionFromRootData = (id, option) => {
+  const component = chunkMap[id];
+  if (component.type !== 'Select') return;
+  component.options = option;
 };

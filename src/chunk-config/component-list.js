@@ -55,4 +55,22 @@ export const components = {
     ],
     children: [],
   },
+  Select: {
+    type: 'Select',
+    name: '下拉选择器',
+    protoTypes: [
+      { name: 'allowClear', type: 'switch', default: false },
+      { name: 'bordered', type: 'switch', default: true },
+      { name: 'placeholder', type: 'input', default: '请输入...' },
+      { name: 'defaultValue', type: 'input', default: '' },
+      { name: 'disabled', type: 'switch', default: false },
+      { name: 'size', type: 'select', default: 'middle', options: ['large', 'middle', 'small'] },
+    ],
+    options: [
+      {
+        value: 1,
+        label: '第一个',
+      },
+    ],
+  },
 };
