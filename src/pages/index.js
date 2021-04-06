@@ -5,6 +5,7 @@ import { OperationArea } from './operation-area';
 import { ConfigureArea } from './configure-area';
 import { createRef, useEffect, useRef, useContext } from 'react';
 import { RootContext } from './../context';
+import { findFromHasIdParentForId } from './../helper';
 
 export const Index = () => {
   const { setContainer } = useContext(RootContext);
@@ -24,7 +25,7 @@ export const Index = () => {
       (e) => {
         if (!parentId.current) {
           return notification.warning({
-            message: '未找到合法父级<parentId.current is undefined>',
+            message: '未找到合法父级...',
           });
         } else {
         }
@@ -35,8 +36,12 @@ export const Index = () => {
     document.addEventListener(
       'dragenter',
       (e) => {
-        parentId.current = e.target?.dataset?.id;
-        console.log(e.target.getAttribute('class')?.includes('ant-form-item-control-input'));
+        const target = e.target;
+        if (!target?.dataset?.id && target.getAttribute('class')?.includes('ant-form-item-control-input')) {
+          parentId.current = findFromHasIdParentForId(e.target);
+        } else if (target?.dataset?.id) {
+          parentId.current = target?.dataset?.id;
+        }
       },
       false
     );

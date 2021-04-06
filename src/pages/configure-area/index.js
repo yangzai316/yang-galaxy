@@ -1,14 +1,25 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import styled from '@emotion/styled';
 import { RootContext } from './../../context';
 import { Switch, Input, Select, Form } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 // 渲染 左侧 参数配置区域
 export const ConfigureArea = () => {
-  const { current: currentChunkData } = useContext(RootContext);
+  const { current: currentChunkData, deleteCurrentChunk } = useContext(RootContext);
+  const deleteCurrent = useCallback(() => {
+    return deleteCurrentChunk(currentChunkData.id);
+  }, [currentChunkData, deleteCurrentChunk]);
   return currentChunkData ? (
-    <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
-      <ViewConfigure currentChunkData={currentChunkData}></ViewConfigure>
-    </Form>
+    <>
+      <Text>
+        <span>{currentChunkData.name}</span>
+        <DeleteOutlined onClickCapture={deleteCurrent} />
+      </Text>
+
+      <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+        <ViewConfigure currentChunkData={currentChunkData}></ViewConfigure>
+      </Form>
+    </>
   ) : (
     <Text>无节点获取焦点</Text>
   );
@@ -83,4 +94,15 @@ const RenderConfigure = ({ protoType, id }) => {
 const Text = styled.p`
   text-align: center;
   padding: 10px;
+  border-bottom: 1px solid #444;
+  display: flex;
+  justify-content: space-between;
+  & > span {
+    font-size: 14px;
+  }
+  & > .anticon {
+    cursor: pointer;
+    color: red;
+    font-size: 18px;
+  }
 `;

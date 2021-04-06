@@ -36,3 +36,9 @@ export const setItemProtoType = (id, name, value) => {
 const findComponentFromList = (type, id) => {
   return JSON.parse(JSON.stringify({ ...components[type], id }));
 };
+
+export const deleteItem = (id) => {
+  // delete chunkMap[id];
+  console.log(JSON.stringify(chunkMap));
+  console.log(JSON.stringify(chunkOrigin));
+};

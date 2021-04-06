@@ -43,12 +43,11 @@ const CreateComponent = ({ id, type, children, protoTypes = [] }) => {
     focusCurrent(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(attrs);
   if (type === 'Form') {
     return (
       <AntDComponents.Form
         {...attrs}
-        onClick={focusElementToCurrent}
+        onClickCapture={focusElementToCurrent}
         style={{ height: '100%', width: '100%', border: '1px dashed #fff', padding: '4px' }}
       >
         {children}
@@ -57,7 +56,11 @@ const CreateComponent = ({ id, type, children, protoTypes = [] }) => {
   }
   if (type === 'Form.Item') {
     return (
-      <AntDComponents.Form.Item {...attrs} onClick={focusElementToCurrent} style={{ width: '100%', border: '1px dashed #fff' }}>
+      <AntDComponents.Form.Item
+        {...attrs}
+        onClickCapture={focusElementToCurrent}
+        style={{ width: '100%', padding: '4px', border: '1px dashed #fff' }}
+      >
         {children}
       </AntDComponents.Form.Item>
     );
@@ -69,7 +72,7 @@ const CreateComponent = ({ id, type, children, protoTypes = [] }) => {
     );
   } else {
     return (
-      <Component {...attrs} onClick={focusElementToCurrent} style={{ height: '100%', width: '100%' }}>
+      <Component {...attrs} onClickCapture={focusElementToCurrent} style={{ height: '100%', width: '100%' }}>
         {attrs.content ? attrs.content : null}
       </Component>
     );

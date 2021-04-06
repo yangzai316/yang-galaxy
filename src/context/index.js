@@ -3,7 +3,7 @@ import { Index } from './../pages/index';
 
 import { chunkMap } from './../chunk-config/map.js';
 import { chunkOrigin } from './../chunk-config/origin.js';
-import { addItemToRootData, setItemProtoType } from './../chunk-config';
+import { addItemToRootData, setItemProtoType, deleteItem } from './../chunk-config';
 
 export const rootData = {
   container: chunkOrigin,
@@ -11,6 +11,7 @@ export const rootData = {
   setContainer: () => {},
   setCurrent: () => {},
   focusCurrent: () => {},
+  deleteCurrentChunk: () => {},
 };
 
 export const RootContext = React.createContext(rootData);
@@ -52,12 +53,25 @@ export class ContextProvider extends React.Component {
         };
       });
     };
+    // 删除选中的组件
+    this.deleteCurrentChunk = (id) => {
+      deleteItem(id);
+      const container = JSON.parse(JSON.stringify(chunkOrigin));
+      this.setState(() => {
+        return {
+          container,
+          current: null,
+        };
+      });
+    };
+
     // 返回 state (包含设置function)
     this.state = {
       container: rootData.container,
       setContainer: this.setContainer,
       setCurrent: this.setCurrent,
       focusCurrent: this.focusCurrent,
+      deleteCurrentChunk: this.deleteCurrentChunk,
     };
   }
 
