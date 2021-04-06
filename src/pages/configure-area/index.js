@@ -1,8 +1,8 @@
 import { useCallback, useContext, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import { RootContext } from './../../context';
-import { Switch, Input, Select, Form, Divider, Button, Popover, message } from 'antd';
-import { MinusCircleOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Switch, Input, Select, Form, Divider, Button, message } from 'antd';
+import { EditOutlined, DeleteOutlined, MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 // 渲染 左侧 参数配置区域
 export const ConfigureArea = () => {
@@ -35,9 +35,9 @@ export const ConfigureArea = () => {
               <Select options={currentChunkData.options}></Select>
             </Form.Item>
             <Form.Item colon={false} label=" ">
-              <AddOptionItem id={currentChunkData.id} options={currentChunkData.options}>
-                添加下拉选项内容
-              </AddOptionItem>
+              <SetOptionItem id={currentChunkData.id} options={currentChunkData.options}>
+                编辑-下拉选项
+              </SetOptionItem>
             </Form.Item>
           </FormBox>
         </>
@@ -151,69 +151,76 @@ const FormBox = ({ children }) => (
   </Form>
 );
 
-const AddOptionItem = ({ children, id, options }) => {
+const SetOptionItem = ({ children, id, options }) => {
   const [visible, setVisible] = useState(false);
-  const [item, setItem] = useState({
-    label: '',
-    value: '',
-  });
+  const [list, setList] = useState(options);
   const { setSelectOption } = useContext(RootContext);
   const sure = () => {
-    if (options.some((o) => o.value === +item.value)) {
-      return message.error('操作失败：添加的 KEY 在历史Options中已存在');
-    }
-    setVisible(false);
-    options.push(item);
-    setSelectOption(id, options);
+    // if (options.some((o) => o.value === +item.value)) {
+    //   return message.error('操作失败：添加的 KEY 在历史Options中已存在');
+    // }
+    // setVisible(false);
+    // options.push(item);
+    // setSelectOption(id, options);
   };
-  const content = (
-    <div>
-      <EmInput
-        placeholder="下拉项Label"
-        value={item.label}
-        onChange={(e) => {
-          setItem({
-            label: e.target.value,
-            value: item.value,
-          });
-        }}
-      />
-      <EmInput
-        placeholder="下拉项Value"
-        value={item.value}
-        onChange={(e) => {
-          setItem({
-            label: item.label,
-            value: e.target.value,
-          });
-        }}
-      />
-      <Button type="text" onClick={sure}>
-        确定
-      </Button>
-    </div>
-  );
+
+  const addItem = () => {
+    setList((_) => {
+      return _.concat({
+        label: '',
+        value: '',
+      });
+    });
+  };
+
   return (
     <>
-      <Popover
-        content={content}
-        title="添加下拉项："
-        trigger="click"
-        visible={visible}
-        onVisibleChange={(visible) => {
-          setVisible(visible);
-        }}
-      >
-        <Button type="dashed" block icon={<PlusOutlined />}>
+      {visible ? (
+        <>
+          {list.map((o, i) => {
+            return (
+              <div key={i}>
+                <EmInput placeholder="Label" value={o.label} />
+                <EmInput placeholder="Value" value={o.value} />
+                &nbsp;
+                <MinusCircleOutlined />
+              </div>
+            );
+          })}
+          <EmButton block size="small" icon={<PlusCircleOutlined />} onClick={addItem}>
+            添加下拉项
+          </EmButton>
+          <div>
+            <Button onClick={sure} size="small">
+              取消
+            </Button>
+            &nbsp;
+            <Button type="primary" size="small" onClick={sure}>
+              确定
+            </Button>
+          </div>
+        </>
+      ) : (
+        <Button
+          type="dashed"
+          block
+          icon={<EditOutlined />}
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
           {children}
         </Button>
-      </Popover>
+      )}
     </>
   );
 };
 
 const EmInput = styled(Input)`
-  width: 200px;
+  width: 76px;
   margin-bottom: 4px;
-  display: block;
+`;
+
+const EmButton = styled(Button)`
+  margin: 6px 0;
 `;
