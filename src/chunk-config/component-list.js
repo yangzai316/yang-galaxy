@@ -36,6 +36,10 @@ export const components = {
       { name: 'labelAlign', type: 'select', default: 'right', options: ['right', 'left'] },
       { name: 'layout', type: 'select', default: 'right', options: ['inline', 'vertical', 'vertical'] },
     ],
+    style: [
+      { name: 'width', type: 'input', default: '100%' },
+      { name: 'height', type: 'input', default: '100%' },
+    ],
     children: [],
   },
   'Form.Item': {
@@ -44,6 +48,10 @@ export const components = {
     protoTypes: [
       { name: 'label', type: 'input', default: '' },
       { name: 'labelAlign', type: 'select', default: 'right', options: ['right', 'left'] },
+    ],
+    style: [
+      { name: 'width', type: 'input', default: '100%' },
+      { name: 'height', type: 'input', default: '100%' },
     ],
     children: [],
   },

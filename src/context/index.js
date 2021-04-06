@@ -3,11 +3,11 @@ import { Index } from './../pages/index';
 
 import { chunkMap } from './../chunk-config/map.js';
 import { chunkOrigin } from './../chunk-config/origin.js';
-import { addItemToRootData, setItemProtoType, deleteItem } from './../chunk-config';
+import { addItemToRootData, setItemProtoType, setItemStyle, deleteItemFromRootData } from './../chunk-config';
 
 export const rootData = {
   container: chunkOrigin,
-  current: null,
+  current: chunkOrigin,
   setContainer: () => {},
   setCurrent: () => {},
   focusCurrent: () => {},
@@ -19,7 +19,7 @@ export const RootContext = React.createContext(rootData);
 export class ContextProvider extends React.Component {
   constructor(props) {
     super(props);
-    // 处理 中间 操作区 的 json
+    // 【新增】
     this.setContainer = (parentId, id, type) => {
       addItemToRootData(parentId, id, type);
       const container = JSON.parse(JSON.stringify(chunkOrigin));
@@ -31,9 +31,14 @@ export class ContextProvider extends React.Component {
         };
       });
     };
-    // 处理 左侧 当前组件 配置项 的 json
-    this.setCurrent = (id, name, value) => {
-      setItemProtoType(id, name, value);
+    // 【编辑】
+    this.setCurrent = (id, name, value, type) => {
+      if (type === 'protoType') {
+        setItemProtoType(id, name, value);
+      } else if (type === 'style') {
+        setItemStyle(id, name, value);
+      }
+
       const container = JSON.parse(JSON.stringify(chunkOrigin));
       const current = JSON.parse(JSON.stringify(chunkMap[id]));
       this.setState(() => {
@@ -43,7 +48,7 @@ export class ContextProvider extends React.Component {
         };
       });
     };
-    // 将左侧属性设置栏，聚焦到点击的组件上
+    // 【获焦】将左侧属性设置栏，聚焦到点击的组件上
     this.focusCurrent = (id) => {
       const current = JSON.parse(JSON.stringify(chunkMap[id]));
 
@@ -53,9 +58,10 @@ export class ContextProvider extends React.Component {
         };
       });
     };
-    // 删除选中的组件
+    // 【移除】删除选中的组件
     this.deleteCurrentChunk = (id) => {
-      deleteItem(id);
+      console.log(id);
+      deleteItemFromRootData(id);
       const container = JSON.parse(JSON.stringify(chunkOrigin));
       this.setState(() => {
         return {
@@ -68,6 +74,7 @@ export class ContextProvider extends React.Component {
     // 返回 state (包含设置function)
     this.state = {
       container: rootData.container,
+      current: rootData.current,
       setContainer: this.setContainer,
       setCurrent: this.setCurrent,
       focusCurrent: this.focusCurrent,

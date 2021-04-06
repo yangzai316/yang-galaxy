@@ -18,11 +18,19 @@ const CreateChunkItem = ({ container }) => {
     });
   }
 
-  return <CreateComponent type={container.type} children={children} protoTypes={container.protoTypes} id={container.id}></CreateComponent>;
+  return (
+    <CreateComponent
+      type={container.type}
+      children={children}
+      protoTypes={container.protoTypes}
+      id={container.id}
+      style={container.style}
+    ></CreateComponent>
+  );
 };
 
 // 渲染 具体 antD 组件
-const CreateComponent = ({ id, type, children, protoTypes = [] }) => {
+const CreateComponent = ({ id, type, children, protoTypes = [], style }) => {
   // (protoTypes 的数组 转为 对象 ) & (去除属性为空) & (添加到组件上)
   const attrs = useMemo(() => {
     const _ = {};
@@ -32,6 +40,14 @@ const CreateComponent = ({ id, type, children, protoTypes = [] }) => {
     _['data-id'] = id;
     return _;
   }, [protoTypes, id]);
+  // (style 的数组 转为 对象 ) & (去除属性为空) & (添加到组件上)
+  const styles = useMemo(() => {
+    const _ = {};
+    style?.forEach((item) => {
+      item.default && (_[item.name] = item.default);
+    });
+    return _;
+  }, [style]);
   // antD 组件库中 找到当前组件
   const Component = useMemo(() => {
     return type !== 'container' ? AntDComponents[type] : null;
@@ -43,18 +59,19 @@ const CreateComponent = ({ id, type, children, protoTypes = [] }) => {
     focusCurrent(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  if (type === 'Form') {
+  if (type === 'container') {
     return (
-      <AntDComponents.Form
-        {...attrs}
-        onClickCapture={focusElementToCurrent}
-        style={{ height: '100%', width: '100%', border: '1px dashed #fff', padding: '4px' }}
-      >
+      <div style={styles} data-id={id} onClickCapture={focusElementToCurrent}>
+        {children}
+      </div>
+    );
+  } else if (type === 'Form') {
+    return (
+      <AntDComponents.Form {...attrs} onClickCapture={focusElementToCurrent} style={{ ...styles, ...{ border: '1px dashed #fff', padding: '4px' } }}>
         {children}
       </AntDComponents.Form>
     );
-  }
-  if (type === 'Form.Item') {
+  } else if (type === 'Form.Item') {
     return (
       <AntDComponents.Form.Item
         {...attrs}
@@ -64,15 +81,9 @@ const CreateComponent = ({ id, type, children, protoTypes = [] }) => {
         {children}
       </AntDComponents.Form.Item>
     );
-  } else if (type === 'container') {
-    return (
-      <div style={{ height: '100%', padding: '10px' }} data-id={id}>
-        {children}
-      </div>
-    );
   } else {
     return (
-      <Component {...attrs} onClickCapture={focusElementToCurrent} style={{ height: '100%', width: '100%' }}>
+      <Component {...attrs} onClickCapture={focusElementToCurrent}>
         {attrs.content ? attrs.content : null}
       </Component>
     );

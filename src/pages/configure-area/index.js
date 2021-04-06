@@ -1,7 +1,7 @@
 import { useCallback, useContext } from 'react';
 import styled from '@emotion/styled';
 import { RootContext } from './../../context';
-import { Switch, Input, Select, Form } from 'antd';
+import { Switch, Input, Select, Form, Divider } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 // 渲染 左侧 参数配置区域
 export const ConfigureArea = () => {
@@ -13,31 +13,50 @@ export const ConfigureArea = () => {
     <>
       <Text>
         <span>{currentChunkData.name}</span>
-        <DeleteOutlined onClickCapture={deleteCurrent} />
+        {currentChunkData.id !== 1 ? <DeleteOutlined onClickCapture={deleteCurrent} /> : null}
       </Text>
-
-      <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
-        <ViewConfigure currentChunkData={currentChunkData}></ViewConfigure>
-      </Form>
+      {/* 组件属性 设置 */}
+      {currentChunkData.protoTypes ? (
+        <>
+          <Divider orientation="left" plain style={{ margin: '0 0 6px 0' }}>
+            组件属性
+          </Divider>
+          <p></p>
+          <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+            <ViewConfigure attributes={currentChunkData.protoTypes} id={currentChunkData.id} type="protoType"></ViewConfigure>
+          </Form>
+        </>
+      ) : null}
+      {/* 组件样式 设置 */}
+      {currentChunkData.style ? (
+        <>
+          <Divider orientation="left" plain style={{ margin: '0 0 6px 0' }}>
+            组件样式
+          </Divider>
+          <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+            <ViewConfigure attributes={currentChunkData.style} id={currentChunkData.id} type="style"></ViewConfigure>
+          </Form>
+        </>
+      ) : null}
     </>
   ) : (
-    <Text>无节点获取焦点</Text>
+    <Text>无组件获得焦点</Text>
   );
 };
 // 循环+递归 渲染 json
-const ViewConfigure = ({ currentChunkData }) => {
-  if (currentChunkData?.protoTypes?.length) {
-    return currentChunkData.protoTypes.map((item, index) => {
-      return <RenderConfigure protoType={item} id={currentChunkData.id} key={index}></RenderConfigure>;
+const ViewConfigure = ({ attributes, id, type }) => {
+  if (attributes?.length) {
+    return attributes.map((item, index) => {
+      return <RenderConfigure type={type} protoType={item} id={id} key={index}></RenderConfigure>;
     });
   }
-  return '';
+  return null;
 };
 // 将组件配置项 具体 渲染 antD 组件
-const RenderConfigure = ({ protoType, id }) => {
+const RenderConfigure = ({ protoType, id, type }) => {
   const { setCurrent } = useContext(RootContext);
   const onChange = (id, name, value) => {
-    setCurrent(id, name, value);
+    setCurrent(id, name, value, type);
   };
   switch (protoType.type) {
     case 'switch':
@@ -94,9 +113,9 @@ const RenderConfigure = ({ protoType, id }) => {
 const Text = styled.p`
   text-align: center;
   padding: 10px;
-  border-bottom: 1px solid #444;
   display: flex;
   justify-content: space-between;
+  margin: 0;
   & > span {
     font-size: 14px;
   }

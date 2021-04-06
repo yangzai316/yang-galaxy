@@ -23,22 +23,41 @@ const addItemToOrigin = (parentId, component) => {
   }
 };
 
-// 设置 chunk 组件的属性数据
+// 设置 chunk 组件的【属性】数据
 export const setItemProtoType = (id, name, value) => {
   const component = chunkMap[id];
-  component?.protoTypes?.forEach((p) => {
-    if (p.name === name) {
-      p.default = value;
+  for (const item of component?.protoTypes || []) {
+    if (item.name === name) {
+      return (item.default = value);
     }
-  });
+  }
 };
 // 从 components 组件表中找到需要的chunk
 const findComponentFromList = (type, id) => {
   return JSON.parse(JSON.stringify({ ...components[type], id }));
 };
 
-export const deleteItem = (id) => {
-  // delete chunkMap[id];
-  console.log(JSON.stringify(chunkMap));
-  console.log(JSON.stringify(chunkOrigin));
+export const deleteItemFromRootData = (id) => {
+  delete chunkMap[id];
+  findNodeAndDelete(chunkOrigin, id);
+};
+const findNodeAndDelete = (data, id, index, parentList) => {
+  console.log(9);
+  if (data.id === id) {
+    return parentList.splice(index, 1);
+  } else if (data?.children?.length) {
+    return data.children.forEach((item, index) => {
+      findNodeAndDelete(item, id, index, data.children);
+    });
+  }
+};
+
+// 设置 chunk 组件的【样式】数据
+export const setItemStyle = (id, name, value) => {
+  const component = chunkMap[id];
+  for (const item of component?.style || []) {
+    if (item.name === name) {
+      return (item.default = value);
+    }
+  }
 };
