@@ -17,20 +17,11 @@ const CreateChunkItem = ({ container }) => {
       return <CreateChunkItem container={item} key={item.id}></CreateChunkItem>;
     });
   }
-
-  return (
-    <CreateComponent
-      type={container.type}
-      children={children}
-      protoTypes={container.protoTypes}
-      id={container.id}
-      style={container.style}
-    ></CreateComponent>
-  );
+  return <CreateComponent {...{ ...container, children }}></CreateComponent>;
 };
 
 // 渲染 具体 antD 组件
-const CreateComponent = ({ id, type, children, protoTypes = [], style }) => {
+const CreateComponent = ({ id, type, children, protoTypes = [], style, options = [] }) => {
   // (protoTypes 的数组 转为 对象 ) & (去除属性为空) & (添加到组件上)
   const attrs = useMemo(() => {
     const _ = {};
@@ -83,7 +74,7 @@ const CreateComponent = ({ id, type, children, protoTypes = [], style }) => {
     );
   } else {
     return (
-      <Component {...attrs} onClickCapture={focusElementToCurrent}>
+      <Component {...attrs} options={options} onClickCapture={focusElementToCurrent}>
         {attrs.content ? attrs.content : null}
       </Component>
     );

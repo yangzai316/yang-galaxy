@@ -31,13 +31,8 @@ export const ConfigureArea = () => {
         <>
           <DividerBox>下拉项设置</DividerBox>
           <FormBox>
-            <Form.Item label="下拉内容：">
-              <Select options={currentChunkData.options}></Select>
-            </Form.Item>
-            <Form.Item colon={false} label=" ">
-              <SetOptionItem id={currentChunkData.id} options={currentChunkData.options}>
-                编辑-下拉选项
-              </SetOptionItem>
+            <Form.Item label="下拉内容：" colon={false}>
+              <SetOptionItem id={currentChunkData.id} options={currentChunkData.options}></SetOptionItem>
             </Form.Item>
           </FormBox>
         </>
@@ -153,71 +148,117 @@ const FormBox = ({ children }) => (
 
 const SetOptionItem = ({ children, id, options }) => {
   const [visible, setVisible] = useState(false);
-  const [list, setList] = useState(options);
+  const [list, setList] = useState([...options]);
   const { setSelectOption } = useContext(RootContext);
-  const sure = () => {
-    // if (options.some((o) => o.value === +item.value)) {
-    //   return message.error('操作失败：添加的 KEY 在历史Options中已存在');
-    // }
-    // setVisible(false);
-    // options.push(item);
-    // setSelectOption(id, options);
-  };
+  // 点击【确定】
+  const sure = (list) => {
+    const cache = {};
+    for (const item of list) {
+      if (cache[item.value]) {
+        return message.error('操作失败：存在相同的 KEY 值');
+      }
+      if (!item.value || !item.label) {
+        return message.error('操作失败：存在 Value 或 Label 的值为空');
+      }
+      cache[item.value] = true;
+    }
 
+    setVisible(false);
+    setSelectOption(id, list);
+    return message.success('操作成功');
+  };
+  // 点击【取消】
+  const cancel = () => {
+    setVisible(false);
+    setList([...options]);
+  };
+  // 点击【添加】
   const addItem = () => {
-    setList((_) => {
-      return _.concat({
+    setList((list) => {
+      return list.concat({
         label: '',
         value: '',
       });
     });
   };
+  // 点击【移除】
+  const remove = (index) => {
+    setList((old) => {
+      const list = old.slice();
+      list.splice(index, 1);
+      return list;
+    });
+  };
+  // 修改【key-value】
+  const edit = (value, index, type) => {
+    setList((old) => {
+      const list = old.slice();
+      list[index][type] = value;
+      return list;
+    });
+  };
 
   return (
     <>
-      {visible ? (
-        <>
-          {list.map((o, i) => {
-            return (
-              <div key={i}>
-                <EmInput placeholder="Label" value={o.label} />
-                <EmInput placeholder="Value" value={o.value} />
-                &nbsp;
-                <MinusCircleOutlined />
-              </div>
-            );
-          })}
-          <EmButton block size="small" icon={<PlusCircleOutlined />} onClick={addItem}>
-            添加下拉项
-          </EmButton>
-          <div>
-            <Button onClick={sure} size="small">
-              取消
-            </Button>
+      <EmTitle>Value：</EmTitle>
+      <EmTitle>Label：</EmTitle>
+
+      {list.map((o, i) => {
+        return (
+          <div key={i}>
+            <EmInput
+              placeholder="Value"
+              value={o.value}
+              onChange={(e) => {
+                edit(e.target.value, i, 'value');
+              }}
+            />
+            <EmInput
+              placeholder="Label"
+              value={o.label}
+              onChange={(e) => {
+                edit(e.target.value, i, 'label');
+              }}
+            />
             &nbsp;
-            <Button type="primary" size="small" onClick={sure}>
-              确定
-            </Button>
+            <MinusCircleOutlined
+              onClick={() => {
+                remove(i);
+              }}
+            />
           </div>
-        </>
-      ) : (
+        );
+      })}
+      <EmButton block size="small" icon={<PlusCircleOutlined />} onClick={addItem}>
+        添加下拉选项
+      </EmButton>
+      <div>
+        <Button onClick={cancel} size="small">
+          取消
+        </Button>
+        &nbsp;
         <Button
-          type="dashed"
-          block
-          icon={<EditOutlined />}
+          type="primary"
+          size="small"
           onClick={() => {
-            setVisible(true);
+            sure(list);
           }}
         >
-          {children}
+          确定
         </Button>
-      )}
+      </div>
     </>
   );
 };
 
 const EmInput = styled(Input)`
   width: 76px;
+  margin-bottom: 4px;
+`;
+const EmTitle = styled.p`
+  width: 76px;
+  display: inline-block;
+  padding-left: 4px;
   margin-bottom: 4px;
 `;
 
