@@ -4,24 +4,24 @@ import { RootContext } from './../../context';
 import * as AntDComponents from 'antd';
 
 // 渲染 中间 操作区
-export const OperationArea = () => {
+export const OperationArea = ({ viewType }) => {
   const { container } = useContext(RootContext);
-  return <CreateChunkItem container={container}></CreateChunkItem>;
+  return <CreateChunkItem container={container} viewType={viewType}></CreateChunkItem>;
 };
 
 // 循环+递归 渲染 json
-const CreateChunkItem = ({ container }) => {
+const CreateChunkItem = ({ container, viewType }) => {
   let children = null;
   if (container?.children?.length) {
     children = container.children.map((item) => {
-      return <CreateChunkItem container={item} key={item.id}></CreateChunkItem>;
+      return <CreateChunkItem container={item} key={item.id} viewType={viewType}></CreateChunkItem>;
     });
   }
-  return <CreateComponent {...{ ...container, children }}></CreateComponent>;
+  return <CreateComponent {...{ ...container, children, viewType }}></CreateComponent>;
 };
 
 // 渲染 具体 antD 组件
-const CreateComponent = ({ id, type, children, protoTypes = [], style, options = [] }) => {
+const CreateComponent = ({ id, type, children, protoTypes = [], style, options = [], viewType }) => {
   // (protoTypes 的数组 转为 对象 ) & (去除属性为空) & (添加到组件上)
   const attrs = useMemo(() => {
     const _ = {};
@@ -58,7 +58,7 @@ const CreateComponent = ({ id, type, children, protoTypes = [], style, options =
     );
   } else if (type === 'Form') {
     return (
-      <AntDComponents.Form {...attrs} onClickCapture={focusElementToCurrent} style={{ ...styles, ...{ border: '1px dashed #fff', padding: '4px' } }}>
+      <AntDComponents.Form {...attrs} onClickCapture={focusElementToCurrent} style={{ ...styles, ...{ border: viewType==='add'&&'1px dashed #fff', padding: viewType==='add'&&'4px' } }}>
         {children}
       </AntDComponents.Form>
     );
@@ -67,7 +67,7 @@ const CreateComponent = ({ id, type, children, protoTypes = [], style, options =
       <AntDComponents.Form.Item
         {...attrs}
         onClickCapture={focusElementToCurrent}
-        style={{ width: '100%', padding: '4px', border: '1px dashed #fff' }}
+        style={{ width: viewType==='add'&&'100%', padding: viewType==='add'&&'4px', border: viewType==='add'&&'1px dashed #fff' }}
       >
         {children}
       </AntDComponents.Form.Item>

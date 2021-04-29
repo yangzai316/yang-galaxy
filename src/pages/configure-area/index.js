@@ -1,8 +1,8 @@
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import styled from '@emotion/styled';
 import { RootContext } from './../../context';
 import { Switch, Input, Select, Form, Divider, Button, message } from 'antd';
-import { EditOutlined, DeleteOutlined, MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 // 渲染 左侧 参数配置区域
 export const ConfigureArea = () => {
@@ -147,7 +147,6 @@ const FormBox = ({ children }) => (
 );
 
 const SetOptionItem = ({ children, id, options }) => {
-  const [visible, setVisible] = useState(false);
   const [list, setList] = useState([...options]);
   const { setSelectOption } = useContext(RootContext);
   // 点击【确定】
@@ -163,13 +162,11 @@ const SetOptionItem = ({ children, id, options }) => {
       cache[item.value] = true;
     }
 
-    setVisible(false);
     setSelectOption(id, list);
     return message.success('操作成功');
   };
   // 点击【取消】
   const cancel = () => {
-    setVisible(false);
     setList([...options]);
   };
   // 点击【添加】

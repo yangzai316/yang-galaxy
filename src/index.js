@@ -4,12 +4,7 @@ import reportWebVitals from './reportWebVitals';
 import './index.less';
 import { ContextProvider } from './context';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <ContextProvider></ContextProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+ReactDOM.render(<ContextProvider></ContextProvider>, document.getElementById('root'));
 
 // If you want to start measuring performance in your app, pass a function
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

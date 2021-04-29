@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { ChunkArea } from './chunk-area';
 import { OperationArea } from './operation-area';
 import { ConfigureArea } from './configure-area';
+import { HeadContent } from './head-content';
 import { createRef, useEffect, useRef, useContext } from 'react';
 import { RootContext } from './../context';
 import { findFromHasIdParentForId } from './../helper';
@@ -48,13 +49,15 @@ export const Index = () => {
   }, []);
   return (
     <Layout>
-      <Header></Header>
+      <Header>
+        <HeadContent></HeadContent>
+      </Header>
       <Layout>
-        <Layout.Sider style={{ paddingTop: '10px' }}>
+        <Layout.Sider style={{ padding: '10px 4px' }}>
           <ChunkArea></ChunkArea>
         </Layout.Sider>
         <Content ref={operation}>
-          <OperationArea></OperationArea>
+          <OperationArea  viewType="add"></OperationArea>
         </Content>
         <Layout.Sider width={300}>
           <ConfigureArea></ConfigureArea>
@@ -67,7 +70,7 @@ export const Index = () => {
 const Content = styled.div`
   width: 100%;
 `;
-
 const Header = styled(Layout.Header)`
-  height: 30px;
+  text-align: right;
+  border-bottom: 1px solid #000;
 `;
